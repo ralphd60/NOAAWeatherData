@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 def get_file_list(archive_url):
     """using the request module, this will retrieve a sudo html list of the files in the director
     it will then use the Beautiful soup module to format the returned data into better formed html
-    thrn filter snd return the file list."""
+    thrn filter snd return the file  list."""
 
     # create response object
     r = requests.get(archive_url)

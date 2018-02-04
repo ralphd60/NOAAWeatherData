@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def count_entries(csv_file, c_size, delimit, colname1):
-    """Return a dictionary with counts of or totals of a second column
+    """Return a dictionary  with counts of or totals of a second column
     occurrences as value for each key."""
 
     # Initialize an empty dictionary: counts_dict

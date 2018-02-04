@@ -1,6 +1,6 @@
 # receives a label and then counts that label
 def type_count (row, col,  counts_dict2):
-    '''this function will take a column, and groups by event type'''
+    '''this function will take a column, and groups  by event type'''
     event_name = row[col]
 
     if event_name == 'Hurricane (Typhoon)':
