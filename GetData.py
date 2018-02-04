@@ -13,7 +13,7 @@ def get_file_list(archive_url):
     # create beautiful-soup object
     soup = BeautifulSoup(r.content, "html.parser")
 
-    # find all files in the directory
+    # find all files in the directory using the tag <a>
     links = soup.findAll('a')
 
     # filter the link sending with .gz
