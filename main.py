@@ -4,10 +4,14 @@ import os.path
 import gzip
 import numpy as np
 from GetData import *
+import logging
+import sys
 
 from AnalysisType import *
 import matplotlib.pyplot as plt
 
+logging.basicConfig(filename='noaa.log', filemode='w', format='%(asctime)s %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def count_entries(csv_file, c_size, delimit, colname1):
     """Return a dictionary  with counts of or totals of a second column
@@ -67,26 +71,30 @@ def count_entries(csv_file, c_size, delimit, colname1):
 
 
 if __name__ == '__main__':
+    filtered_date = []
+    n = len(sys.argv)
+
+    for i in range(n):
+        filtered_date.append(str(sys.argv[i]))
+
     url = 'https://www1.ncdc.noaa.gov/pub/data/swdi/stormevents/csvfiles/'
 
     dir_dest = 'C:\\Development\\data\\'
 
     # Get the list of files in the directory (this calls the function get_file_list()
     # passing the url of the directory where the file is located
-    # data_detail = get_file_list(url)
-    # retrieve_and_filter(data_detail, dir_dest, url)
+    data_detail = get_file_list(url)
+    retrieve_and_filter(data_detail, dir_dest, url, filtered_date)
 
     # calls the function thar will uncompress files, load into datadframe and then
     # scrub scrub the data
     result_counts = \
         count_entries('C:\\Development\\data\\', 10000, ',', 'EVENT_TYPE')
 
-    # Print result_counts
-    print(result_counts)
     df_temp = pd.DataFrame(result_counts)
     df = df_temp.transpose()
-    print(df.head(10))
+    print(df.head(20))
 
-    df.plot(kind="bar", log=True, stacked=False)
-    # df.plot(kind="bar", stacked=True)
+    # df.plot(kind="bar", log=True, stacked=False)
+    df.plot(kind="line", logy=True)
     plt.show()

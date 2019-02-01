@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import logging
 
 
 def get_file_list(archive_url):
@@ -15,6 +16,7 @@ def get_file_list(archive_url):
 
     # find all files in the directory using the tag <a>
     links = soup.findAll('a')
+    logging.info(links)
 
     # filter the link sending with .gz
     file_list = [archive_url + link['href'] for link in links if link['href'].endswith('gz')]
@@ -22,23 +24,25 @@ def get_file_list(archive_url):
     return file_list
 
 
-def retrieve_and_filter(detail_data, dest_dir, url):
+def retrieve_and_filter(detail_data, dest_dir, url, date_list):
     # use a list comprehension to filter the list for just specific files
     file_list_filtered = [x for x in detail_data if 'StormEvents_details' in x]
     # debug print statements
-    # print(file_list_filtered)
+    logging.info(file_list_filtered)
     # print(len(file_list_filtered))
 
     for link in file_list_filtered:
         # splicing the file to just capture the name
         filename = link.split('/')[-1]
-        # then finally retrieving the file
-        response = requests.get(url + filename)
-        # debug print statemnet
+        for filter_date in date_list:
+            if filter_date in filename:
+                # then finally retrieving the file
+                response = requests.get(url + filename)
+                # debug print statemnet
 
-        if response.status_code == 200:
-            with open(dest_dir + filename, 'wb') as f:
-                # Chunking it seems to create problems ith a gzip file
-                # for chunk in response.iter_content(chunk_size = 1024*1024):
-                # write the file out to local directory
-                f.write(response.content)
+                if response.status_code == 200:
+                    with open(dest_dir + filename, 'wb') as f:
+                        # Chunking it seems to create problems ith a gzip file
+                        # for chunk in response.iter_content(chunk_size = 1024*1024):
+                        # write the file out to local directory
+                        f.write(response.content)
